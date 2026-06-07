@@ -1,7 +1,14 @@
-import { MongoClient } from "mongodb"
+import { MongoClient, MongoClientOptions } from "mongodb"
 
 const uri = process.env.MONGODB_URI!
-const options = {}
+
+if (!uri) throw new Error("MONGODB_URI is not defined")
+
+const options: MongoClientOptions = {
+  serverSelectionTimeoutMS: 30000,
+  connectTimeoutMS: 30000,
+  socketTimeoutMS: 30000,
+}
 
 let client: MongoClient
 let clientPromise: Promise<MongoClient>
