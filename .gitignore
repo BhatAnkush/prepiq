@@ -40,3 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .env
+client_secret_767446103387-amk9pns2v1sb4ps7i5bbd0mbrdoi2okp.apps.googleusercontent.com.json
+plan.md
+plan.pdf
