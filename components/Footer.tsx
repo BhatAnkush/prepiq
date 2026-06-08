@@ -37,12 +37,7 @@ export default function Footer() {
             >
               Dashboard
             </Link>
-            <Link
-              href="/dashboard/history"
-              className="text-gray-300 hover:text-white transition-colors w-fit"
-            >
-              History
-            </Link>
+            
           </div>
         </div>
 

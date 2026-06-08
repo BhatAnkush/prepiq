@@ -12,6 +12,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import type { InterviewSession } from "@/types";
+import { Logo } from "@/components/Icons/Logo";
 export default async function DashboardPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
@@ -57,25 +58,6 @@ export default async function DashboardPage() {
   return (
     <main className="min-h-screen bg-[#0a0a0a] text-white">
       <div className="fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none" />
-
-      {/* Nav */}
-      <nav className="relative z-10 border-b border-white/[0.06] px-6 py-4 flex items-center justify-between max-w-5xl mx-auto">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 bg-violet-500 rounded-md flex items-center justify-center">
-            <Zap className="w-4 h-4 text-white" strokeWidth={2.5} />
-          </div>
-          <span className="font-semibold tracking-tight">PrepIQ</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-gray-500">{session.user.name}</span>
-          <Link
-            href="/setup"
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-violet-600 hover:bg-violet-500 text-white rounded-lg text-xs font-medium transition-colors"
-          >
-            <Plus className="w-3.5 h-3.5" /> New interview
-          </Link>
-        </div>
-      </nav>
 
       <div className="relative z-10 max-w-5xl mx-auto px-6 py-10">
         {/* Stats */}

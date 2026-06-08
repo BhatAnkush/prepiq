@@ -22,12 +22,7 @@ export default async function Navbar() {
           >
             Dashboard
           </Link>
-          <Link
-            href="/dashboard/history"
-            className="text-sm text-gray-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors"
-          >
-            History
-          </Link>
+          
           <div className="w-px h-4 bg-white/8 mx-1" />
           <UserDropdown name={session.user.name} image={session.user.image} />
           <Link

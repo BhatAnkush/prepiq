@@ -79,9 +79,7 @@ export default function SetupPage() {
       <div className="relative z-10 max-w-2xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-2 mb-12">
-          <div className="w-7 h-7 bg-violet-500 rounded-md flex items-center justify-center">
-            <Logo className="w-4 h-4 text-white" />
-          </div>
+          <Logo className="w-4 h-4 text-white" />
           <span className="font-semibold tracking-tight">PrepIQ</span>
         </div>
 

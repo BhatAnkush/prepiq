@@ -2,6 +2,7 @@
 import { signIn } from "next-auth/react";
 import { Zap } from "lucide-react";
 import { Google } from "@/components/Icons";
+import { Logo } from "@/components/Icons/Logo";
 
 export default function LoginPage() {
   return (
@@ -11,9 +12,7 @@ export default function LoginPage() {
 
       <div className="relative z-10 w-full max-w-sm">
         <div className="flex items-center gap-2 mb-10 justify-center">
-          <div className="w-8 h-8 bg-violet-500 rounded-md flex items-center justify-center">
-            <Zap className="w-4 h-4 text-white" strokeWidth={2.5} />
-          </div>
+          <Logo />
           <span className="font-semibold tracking-tight text-lg">PrepIQ</span>
         </div>
 
