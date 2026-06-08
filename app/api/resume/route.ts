@@ -1,22 +1,42 @@
-import { auth } from "@/lib/auth"
-import { NextResponse } from "next/server"
-const pdfParse = require("pdf-parse")
+export const runtime = "nodejs";
+
+import { auth } from "@/lib/auth";
+import { NextResponse } from "next/server";
+import { extractText } from "unpdf";
 
 export async function POST(req: Request) {
-  const session = await auth()
-  if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-  const formData = await req.formData()
-  const file = formData.get("resume") as File
-  if (!file) return NextResponse.json({ error: "No file" }, { status: 400 })
+    const formData = await req.formData();
+    const file = formData.get("resume") as File | null;
 
-  const arrayBuffer = await file.arrayBuffer()
-  const buffer = Buffer.from(arrayBuffer)
+    if (!file) {
+      return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    }
 
-  const data = await pdfParse(buffer)
-  const text = data.text
-    .replace(/\n{3,}/g, "\n\n")   // collapse excessive newlines
-    .trim()
+    if (file.type !== "application/pdf") {
+      return NextResponse.json(
+        { error: "Invalid file type. Please upload a PDF." },
+        { status: 400 },
+      );
+    }
 
-  return NextResponse.json({ text, pages: data.numpages })
+    const arrayBuffer = await file.arrayBuffer();
+    const { text } = await extractText(new Uint8Array(arrayBuffer), {
+      mergePages: true,
+    });
+    const cleaned = (text as string).replace(/\n{3,}/g, "\n\n").trim();
+
+    return NextResponse.json({ text: cleaned });
+  } catch (error) {
+    console.error("PDF Parsing Error:", error);
+    return NextResponse.json(
+      { error: "Failed to parse PDF. The file may be corrupted or encrypted." },
+      { status: 500 },
+    );
+  }
 }

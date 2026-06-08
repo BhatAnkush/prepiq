@@ -16,15 +16,23 @@ export default async function DashboardPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
-  const client = await clientPromise;
-  const db = client.db("interview-prep");
+  let sessions: InterviewSession[] = [];
+  let isDbUnavailable = false;
 
-  const sessions = await db
-    .collection<InterviewSession>("sessions")
-    .find({ userId: session.user.id })
-    .sort({ createdAt: -1 })
-    .limit(10)
-    .toArray();
+  try {
+    const client = await clientPromise;
+    const db = client.db("interview-prep");
+
+    sessions = await db
+      .collection<InterviewSession>("sessions")
+      .find({ userId: session.user.id })
+      .sort({ createdAt: -1 })
+      .limit(10)
+      .toArray();
+  } catch (error) {
+    isDbUnavailable = true;
+    console.error("Failed to load dashboard sessions", error);
+  }
 
   const sessionsWithScores = sessions.map((s) => {
     const scored = s.questions.filter((q) => q.score !== undefined); // no `any` needed now
@@ -106,6 +114,13 @@ export default async function DashboardPage() {
           </h2>
         </div>
 
+        {isDbUnavailable && (
+          <div className="mb-4 rounded-xl border border-amber-400/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">
+            Could not connect to MongoDB right now. Please retry in a few
+            seconds.
+          </div>
+        )}
+
         {sessions.length === 0 ? (
           <div className="text-center py-20 border border-dashed border-white/[0.06] rounded-2xl">
             <div className="w-12 h-12 bg-violet-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -121,46 +136,51 @@ export default async function DashboardPage() {
           </div>
         ) : (
           <div className="space-y-3">
-            {sessionsWithScores.map((s) => (
-              <Link
-                key={s._id.toString()}
-                href={`/interview/${s._id.toString()}`}
-                className="flex items-center justify-between p-5 bg-white/[0.03] border border-white/[0.06] rounded-xl hover:border-white/10 transition-colors group"
-              >
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <Building2 className="w-3.5 h-3.5 text-gray-500" />
-                    <p className="font-semibold text-sm">{s.companyName}</p>
-                    <span className="text-gray-600">·</span>
-                    <p className="text-sm text-gray-400">{s.roleTitle}</p>
+            {sessionsWithScores.map((s) => {
+              const sessionId = s._id?.toString();
+              if (!sessionId) return null;
+
+              return (
+                <Link
+                  key={sessionId}
+                  href={`/interview/${sessionId}`}
+                  className="flex items-center justify-between p-5 bg-white/[0.03] border border-white/[0.06] rounded-xl hover:border-white/10 transition-colors group"
+                >
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <Building2 className="w-3.5 h-3.5 text-gray-500" />
+                      <p className="font-semibold text-sm">{s.companyName}</p>
+                      <span className="text-gray-600">·</span>
+                      <p className="text-sm text-gray-400">{s.roleTitle}</p>
+                    </div>
+                    <p className="text-xs text-gray-600 pl-5">
+                      {new Date(s.createdAt).toLocaleDateString("en-IN", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                      {" · "}
+                      {s.questions?.length || 0} questions · {s.scoredCount}{" "}
+                      answered
+                    </p>
                   </div>
-                  <p className="text-xs text-gray-600 pl-5">
-                    {new Date(s.createdAt).toLocaleDateString("en-IN", {
-                      day: "numeric",
-                      month: "short",
-                      year: "numeric",
-                    })}
-                    {" · "}
-                    {s.questions?.length || 0} questions · {s.scoredCount}{" "}
-                    answered
-                  </p>
-                </div>
-                <div className="flex items-center gap-3">
-                  {s.avgScore !== null ? (
-                    <span
-                      className={`text-lg font-black ${s.avgScore >= 7 ? "text-green-400" : s.avgScore >= 5 ? "text-amber-400" : "text-red-400"}`}
-                    >
-                      {s.avgScore}/10
-                    </span>
-                  ) : (
-                    <span className="text-xs text-gray-600 px-2 py-1 bg-white/[0.03] rounded-lg border border-white/[0.06]">
-                      In progress
-                    </span>
-                  )}
-                  <ChevronRight className="w-4 h-4 text-gray-700 group-hover:text-gray-400 transition-colors" />
-                </div>
-              </Link>
-            ))}
+                  <div className="flex items-center gap-3">
+                    {s.avgScore !== null ? (
+                      <span
+                        className={`text-lg font-black ${s.avgScore >= 7 ? "text-green-400" : s.avgScore >= 5 ? "text-amber-400" : "text-red-400"}`}
+                      >
+                        {s.avgScore}/10
+                      </span>
+                    ) : (
+                      <span className="text-xs text-gray-600 px-2 py-1 bg-white/[0.03] rounded-lg border border-white/[0.06]">
+                        In progress
+                      </span>
+                    )}
+                    <ChevronRight className="w-4 h-4 text-gray-700 group-hover:text-gray-400 transition-colors" />
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>

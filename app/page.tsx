@@ -4,28 +4,12 @@ import { Github } from "@/components/Icons";
 
 export default function LandingPage() {
   return (
-    <main className="min-h-screen bg-[#0a0a0a] text-white overflow-hidden">
-      <div className="fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none" />
-      <div className="fixed top-[-20%] left-[50%] translate-x-[-50%] w-[600px] h-[600px] bg-violet-600/20 rounded-full blur-[120px] pointer-events-none" />
-
-      {/* Nav */}
-      <nav className="relative z-10 flex items-center justify-between px-8 py-6 max-w-6xl mx-auto">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 bg-violet-500 rounded-md flex items-center justify-center">
-            <Zap className="w-4 h-4 text-white" strokeWidth={2.5} />
-          </div>
-          <span className="font-semibold tracking-tight">PrepIQ</span>
-        </div>
-        <Link
-          href="/login"
-          className="flex items-center gap-1.5 text-sm px-4 py-2 bg-white text-black rounded-lg font-medium hover:bg-gray-100 transition-colors"
-        >
-          Get started free <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
-      </nav>
+    <main className="overflow-hidden">
+      <div className="fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-size-[64px_64px] pointer-events-none" />
+      <div className="fixed top-[-20%] left-[50%] translate-x-[-50%] w-150 h-150 bg-violet-600/20 rounded-full blur-[120px] pointer-events-none" />
 
       {/* Hero */}
-      <section className="relative z-10 max-w-4xl mx-auto px-8 pt-24 pb-32 text-center">
+      <section className="relative z-10 max-w-4xl mx-auto px-8 pt-20 pb-32 text-center">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-violet-500/10 border border-violet-500/20 rounded-full text-violet-400 text-xs font-medium mb-8">
           <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-pulse" />
           Free · Open source · No credit card
@@ -33,7 +17,7 @@ export default function LandingPage() {
         <h1 className="text-5xl sm:text-7xl font-black tracking-tighter leading-[0.95] mb-6">
           Mock interviews
           <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">
+          <span className="text-transparent bg-clip-text bg-linear-to-r from-violet-400 to-fuchsia-400">
             built for your JD
           </span>
         </h1>
@@ -59,7 +43,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section className="relative z-10 max-w-5xl mx-auto px-8 pb-32">
+      <section className="relative z-10 max-w-5xl mx-auto px-8 pb-24">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
             {
@@ -80,7 +64,7 @@ export default function LandingPage() {
           ].map((f) => (
             <div
               key={f.title}
-              className="p-6 bg-white/[0.03] border border-white/[0.06] rounded-xl hover:border-white/10 transition-colors"
+              className="p-6 bg-white/3 border border-white/6 rounded-xl hover:border-white/10 transition-colors"
             >
               <div className="w-9 h-9 bg-violet-500/10 rounded-lg flex items-center justify-center mb-4">
                 {f.icon}
@@ -91,13 +75,6 @@ export default function LandingPage() {
           ))}
         </div>
       </section>
-
-      <footer className="relative z-10 border-t border-white/[0.06] px-8 py-6 max-w-6xl mx-auto flex items-center justify-between">
-        <span className="text-xs text-gray-600">PrepIQ — free forever</span>
-        <span className="text-xs text-gray-600">
-          Built with Next.js · Groq · MongoDB
-        </span>
-      </footer>
     </main>
   );
 }
